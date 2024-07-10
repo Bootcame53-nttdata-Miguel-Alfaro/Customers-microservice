@@ -1,5 +1,5 @@
 # Exclude the Maven or Gradle build directory
-target/
+!target/
 build/
 
 # Exclude git repository files
