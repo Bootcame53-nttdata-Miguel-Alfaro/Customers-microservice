@@ -3,7 +3,7 @@ name: Build and Deploy to Azure Container Registry
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -16,11 +16,22 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '17'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Build with Maven
         run: mvn clean package
+
+      - name: List files in target directory
+        run: ls -l target
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
